@@ -2,7 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { apiRouter } from '../src/server/routes';
 
-dotenv.config();
+// Safe dotenv loading: Only load local .env in non-Vercel local development to avoid overriding Vercel environment variables
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 
@@ -11,27 +14,31 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Vercel serverless path normalizer middleware:
-// Ensures req.url reflects the requested API route even if rewritten by Vercel
+// When Vercel rewrites /api/(.*) to /api, req.url may arrive as / or /api.
+// Use x-forwarded-uri (or x-original-uri) to restore the original client-requested subpath.
 app.use((req, _res, next) => {
-  const matchedPath = req.headers['x-matched-path'] as string | undefined;
-  const forwardedUri = req.headers['x-forwarded-uri'] as string | undefined;
+  const forwardedUri = (req.headers['x-forwarded-uri'] || req.headers['x-original-uri']) as string | undefined;
   
-  if ((req.url === '/' || req.url === '/api' || req.url === '') && (matchedPath || forwardedUri)) {
-    req.url = matchedPath || forwardedUri || req.url;
+  if (forwardedUri && (req.url === '/' || req.url === '/api' || req.url === '' || req.url === '/api/')) {
+    req.url = forwardedUri;
   }
   next();
 });
 
-// Health check endpoint
-app.get('/health', (_req, res) => {
-  res.json({
+// Dedicated unauthenticated health check endpoints (support both direct /api/health and /health)
+const healthCheckHandler = (_req: express.Request, res: express.Response) => {
+  res.status(200).json({
     status: 'healthy',
     platform: 'DefenceLogix AI',
+    version: '1.0.0',
     timestamp: new Date().toISOString()
   });
-});
+};
 
-// Mount API router for both direct serverless routes and /api prefixed routes
+app.get('/api/health', healthCheckHandler);
+app.get('/health', healthCheckHandler);
+
+// Mount API router for both direct serverless routes (/api/*) and base routes (/*)
 app.use('/api', apiRouter);
 app.use('/', apiRouter);
 

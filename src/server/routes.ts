@@ -27,17 +27,20 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-// Simple, robust JWT token generator using HMAC-SHA256 (no external dependency fragility)
-function getJwtSecret(): string {
+// Simple, robust JWT token generator using HMAC-SHA256 (reads process.env.JWT_SECRET at runtime)
+export function getJwtSecret(): string | null {
   const secret = process.env.JWT_SECRET;
-  if (!secret || secret.trim() === '') {
-    throw new Error('FATAL SECURITY ERROR: JWT_SECRET environment variable is missing. You must define JWT_SECRET in your server environment variables.');
+  if (!secret || typeof secret !== 'string' || secret.trim() === '') {
+    return null;
   }
-  return secret;
+  return secret.trim();
 }
 
 export function signToken(payload: object): string {
   const secret = getJwtSecret();
+  if (!secret) {
+    throw new Error('Server configuration error: JWT_SECRET environment variable is missing.');
+  }
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const body = Buffer.from(JSON.stringify({ ...payload, exp: Math.floor(Date.now() / 1000) + (24 * 3600) })).toString('base64url');
   const signature = crypto.createHmac('sha256', secret).update(`${header}.${body}`).digest('base64url');
@@ -47,6 +50,10 @@ export function signToken(payload: object): string {
 export function verifyToken(token: string): any | null {
   try {
     const secret = getJwtSecret();
+    if (!secret) {
+      console.error('[DefenceLogix Auth] Token verification failed: JWT_SECRET is not configured in server environment.');
+      return null;
+    }
     const parts = token.split('.');
     if (parts.length !== 3) return null;
     const [header, body, signature] = parts;
@@ -74,6 +81,17 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+  const secret = getJwtSecret();
+  if (!secret) {
+    console.error('[DefenceLogix Auth] Configuration Diagnostic: Cannot verify token because JWT_SECRET is not set in server environment.');
+    res.status(500).json({
+      error: 'Server authentication configuration error: JWT_SECRET is missing. Please configure JWT_SECRET in Vercel project environment variables.',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
+    });
+    return;
+  }
+
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Authentication required. Authorization header missing or format is not Bearer <token>' });
@@ -132,6 +150,17 @@ apiRouter.post('/auth/demo', (req: Request, res: Response) => {
     return;
   }
 
+  const secret = getJwtSecret();
+  if (!secret) {
+    console.error('[DefenceLogix Auth] Configuration Diagnostic: process.env.JWT_SECRET is missing or empty in the server runtime environment. Please configure JWT_SECRET in your Vercel project environment variables.');
+    res.status(500).json({
+      error: 'Authentication configuration error: JWT_SECRET environment variable is missing on the server. Please set JWT_SECRET in your Vercel project environment variables.',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
+    });
+    return;
+  }
+
   try {
     const token = signToken({
       id: user.id,
@@ -158,7 +187,9 @@ apiRouter.post('/auth/demo', (req: Request, res: Response) => {
   } catch (err) {
     console.error('[DefenceLogix Auth] Demo token signing failed:', err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing'
+      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
     });
   }
 });
@@ -182,6 +213,17 @@ apiRouter.get('/auth/demo', (req: Request, res: Response) => {
     return;
   }
 
+  const secret = getJwtSecret();
+  if (!secret) {
+    console.error('[DefenceLogix Auth] Configuration Diagnostic: process.env.JWT_SECRET is missing or empty in the server runtime environment. Please configure JWT_SECRET in your Vercel project environment variables.');
+    res.status(500).json({
+      error: 'Authentication configuration error: JWT_SECRET environment variable is missing on the server. Please set JWT_SECRET in your Vercel project environment variables.',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
+    });
+    return;
+  }
+
   try {
     const token = signToken({
       id: user.id,
@@ -199,7 +241,9 @@ apiRouter.get('/auth/demo', (req: Request, res: Response) => {
   } catch (err) {
     console.error('[DefenceLogix Auth] Demo token signing failed:', err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing'
+      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
     });
   }
 });
@@ -215,6 +259,17 @@ apiRouter.post('/auth/login', (req: Request, res: Response) => {
   const user = db.getUserByEmail(email);
   if (!user) {
     res.status(401).json({ error: 'Invalid military credentials or email' });
+    return;
+  }
+
+  const secret = getJwtSecret();
+  if (!secret) {
+    console.error('[DefenceLogix Auth] Configuration Diagnostic: process.env.JWT_SECRET is missing or empty in the server runtime environment. Please configure JWT_SECRET in your Vercel project environment variables.');
+    res.status(500).json({
+      error: 'Authentication configuration error: JWT_SECRET environment variable is missing on the server. Please set JWT_SECRET in your Vercel project environment variables.',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
+    });
     return;
   }
 
@@ -244,7 +299,9 @@ apiRouter.post('/auth/login', (req: Request, res: Response) => {
   } catch (err) {
     console.error('[DefenceLogix Auth] Login signing failed:', err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing'
+      error: err instanceof Error ? err.message : 'Server authentication configuration error: JWT_SECRET missing',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
     });
   }
 });
@@ -260,6 +317,17 @@ apiRouter.post('/auth/register', (req: Request, res: Response) => {
   const existing = db.getUserByEmail(email);
   if (existing) {
     res.status(409).json({ error: 'User with this email already exists' });
+    return;
+  }
+
+  const secret = getJwtSecret();
+  if (!secret) {
+    console.error('[DefenceLogix Auth] Configuration Diagnostic: process.env.JWT_SECRET is missing or empty in the server runtime environment. Please configure JWT_SECRET in your Vercel project environment variables.');
+    res.status(500).json({
+      error: 'Authentication configuration error: JWT_SECRET environment variable is missing on the server. Please set JWT_SECRET in your Vercel project environment variables.',
+      code: 'MISSING_JWT_SECRET',
+      platform: 'DefenceLogix AI'
+    });
     return;
   }
 
