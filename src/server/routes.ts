@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { db } from './db';
-import { runForecastingModel, optimizeLogisticsNetwork, MLModelOptions } from './ml';
-import { askLogiAi } from './gemini';
-import { fetchWeatherForLocation, fetchWeatherForAllLocations } from './weather';
-import { UserRole, ItemCategory, DashboardMetrics } from '../types';
+import { db } from './db.js';
+import { runForecastingModel, optimizeLogisticsNetwork, MLModelOptions } from './ml.js';
+import { askLogiAi } from './gemini.js';
+import { fetchWeatherForLocation, fetchWeatherForAllLocations } from './weather.js';
+import { UserRole, ItemCategory, DashboardMetrics } from '../types/index.js';
 
 export const apiRouter = Router();
 

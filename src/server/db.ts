@@ -11,9 +11,9 @@ import {
   AlertItem,
   AuditLog,
   ItemCategory
-} from '../types';
-import { calculateSafetyStock, calculateReorderPoint, calculateStockoutRisk } from './ml';
-import { evaluateSensorAnomalies, applyLiveTelemetryJitter } from '../utils/iotConfig';
+} from '../types/index.js';
+import { calculateSafetyStock, calculateReorderPoint, calculateStockoutRisk } from './ml.js';
+import { evaluateSensorAnomalies, applyLiveTelemetryJitter } from '../utils/iotConfig.js';
 
 export interface DatabaseState {
   users: User[];

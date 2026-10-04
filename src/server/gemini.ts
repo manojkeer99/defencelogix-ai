@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { db } from './db';
+import { db } from './db.js';
 
 // Server-side Gemini initialization following gemini-api skill specifications
 const apiKey = process.env.GEMINI_API_KEY;

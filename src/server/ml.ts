@@ -1,4 +1,4 @@
-import { DemandHistoryRecord, InventoryItem, ForecastResult, LogisticsLocation, LogisticsRecommendation, Vehicle, LogisticsRoute } from '../types';
+import { DemandHistoryRecord, InventoryItem, ForecastResult, LogisticsLocation, LogisticsRecommendation, Vehicle, LogisticsRoute } from '../types/index.js';
 
 export interface MLModelOptions {
   modelType: 'Moving Average' | 'Exponential Smoothing' | 'Random Forest' | 'Gradient Boosting' | 'LSTM';

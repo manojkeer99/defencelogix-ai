@@ -1,4 +1,4 @@
-import { LogisticsLocation, WeatherData, WeatherImpactLevel, WeatherDailyForecast } from '../types';
+import { LogisticsLocation, WeatherData, WeatherImpactLevel, WeatherDailyForecast } from '../types/index.js';
 
 /**
  * Open-Meteo Public Weather API Service

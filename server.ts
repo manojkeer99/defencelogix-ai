@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { apiRouter } from './src/server/routes';
+import { apiRouter } from './api/index.js';
 
 dotenv.config();
 

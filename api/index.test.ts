@@ -3497,35 +3497,11 @@ if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
 var app = express();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-// Robust Vercel serverless request path normalizer
 app.use((req, _res, next) => {
-  // Strategy 1: Check if ?path= was passed via Vercel rewrite
-  const queryIndex = req.url.indexOf('?path=');
-  if (queryIndex !== -1) {
-    const rawPath = req.url.slice(queryIndex + 6).split('&')[0];
-    const subpath = decodeURIComponent(rawPath);
-    req.url = subpath.startsWith('/') ? subpath : '/' + subpath;
-    return next();
+  const forwardedUri = req.headers["x-forwarded-uri"] || req.headers["x-original-uri"];
+  if (forwardedUri && (req.url === "/" || req.url === "/api" || req.url === "" || req.url === "/api/")) {
+    req.url = forwardedUri;
   }
-  
-  // Strategy 2: Check x-now-route-matches header
-  const routeMatches = req.headers['x-now-route-matches'];
-  if (routeMatches && (req.url === '/' || req.url === '/api' || req.url === '' || req.url === '/api/')) {
-    const match = String(routeMatches).match(/1=([^&]+)/);
-    if (match && match[1]) {
-      const subpath = decodeURIComponent(match[1]);
-      req.url = subpath.startsWith('/') ? subpath : '/' + subpath;
-      return next();
-    }
-  }
-
-  // Strategy 3: Check x-forwarded-uri or x-original-uri headers
-  const forwardedUri = req.headers['x-forwarded-uri'] || req.headers['x-original-uri'];
-  if (forwardedUri && (req.url === '/' || req.url === '/api' || req.url === '' || req.url === '/api/')) {
-    req.url = String(forwardedUri);
-    return next();
-  }
-
   next();
 });
 var healthCheckHandler = (_req, res) => {

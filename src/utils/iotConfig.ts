@@ -1,4 +1,4 @@
-import { IoTSensorNode, SensorAnomalyRecord, SensorStatusLevel, ItemCategory } from '../types';
+import { IoTSensorNode, SensorAnomalyRecord, SensorStatusLevel, ItemCategory } from '../types/index.js';
 
 /**
  * Centralized IoT Sensor Thresholds Configuration
