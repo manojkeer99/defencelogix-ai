@@ -1591,6 +1591,20 @@ function generateInitialDatabase() {
       description: "Available heavy-duty vehicle capacity constrained due to simultaneous north and south sector supply dispatches.",
       recommendedAction: "Coordinate with EME workshop to expedite STALLION-4x4-108 routine maintenance release.",
       status: "NEW"
+    },
+    {
+      id: "ALT-2026-007",
+      timestamp: new Date(now - 10 * 6e4).toISOString(),
+      type: "INVENTORY ANOMALY",
+      severity: "CRITICAL",
+      locationId: "LOC-FWD-CHARLIE",
+      locationName: "Forward Node Charlie (Glacier Base)",
+      sensorId: "SEN-COLD-MED-03",
+      sensorName: "Medical Deep Storage Cold Chain Unit",
+      title: "Glacier Base Cold-Chain Refrigeration Excursion",
+      description: "Chamber temperature rose to +9.4°C exceeding critical threshold (+8°C). Rapid refrigeration cycle recovery needed for whole blood and antibiotic reserves.",
+      recommendedAction: "Engage auxiliary battery backup chiller and deploy medical biomedical technician for emergency compressor check.",
+      status: "NEW"
     }
   ];
   const auditLogs = [

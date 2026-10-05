@@ -93,15 +93,15 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900 border border-cyan-500/30">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-cyan-400" />
-            <h1 className="font-heading text-xl font-bold tracking-wide text-white">
+            <FileText className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+            <h1 className="font-heading text-xl font-bold tracking-wide text-slate-900 dark:text-white">
               INTELLIGENT REPORT GENERATOR & EXPORT STUDIO
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
             Automated compilation of military logistics briefings with AI observations, tables & PDF/CSV outputs
           </p>
         </div>
@@ -112,28 +112,28 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         {reportTypes.map((rpt, idx) => (
           <div 
             key={idx}
-            className="hud-panel p-5 rounded-xl flex flex-col justify-between hover:border-cyan-400/50 transition-all group"
+            className="hud-panel p-5 rounded-xl flex flex-col justify-between border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/80 hover:border-cyan-500 dark:hover:border-cyan-400/50 transition-all group shadow-xs"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
+                <span className="text-[10px] font-mono text-cyan-700 dark:text-cyan-400 uppercase tracking-widest font-bold">
                   DOCUMENT TEMPLATE #{idx + 1}
                 </span>
-                <FileText className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+                <FileText className="w-4 h-4 text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />
               </div>
-              <h3 className="font-heading font-bold text-base text-white">
+              <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">
                 {rpt.title}
               </h3>
-              <p className="text-xs text-slate-400 font-sans leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
                 {rpt.desc}
               </p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-800 flex gap-2">
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-2">
               <button
                 onClick={() => handleGenerate(rpt.title)}
                 disabled={generating}
-                className="flex-1 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="flex-1 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Generate Report</span>
@@ -145,22 +145,22 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
       {/* Generated Report Viewer Modal / Container */}
       {activeReport && (
-        <div className="hud-panel p-6 rounded-2xl border-cyan-500/40 space-y-6">
+        <div className="hud-panel p-6 rounded-2xl border border-cyan-500/40 bg-white dark:bg-slate-900 space-y-6 shadow-2xl">
           {/* Document Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 font-mono text-[10px] border border-cyan-500/40 font-bold">
+                <span className="px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 font-mono text-[10px] border border-cyan-300 dark:border-cyan-500/40 font-bold">
                   {activeReport.classification}
                 </span>
-                <span className="text-xs font-mono text-slate-400">
+                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
                   REF: DSSC-26251-{Date.now().toString().slice(-6)}
                 </span>
               </div>
-              <h2 className="font-heading text-xl font-bold text-white mt-1">
+              <h2 className="font-heading text-xl font-bold text-slate-900 dark:text-white mt-1">
                 {activeReport.title}
               </h2>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                 Generated: {new Date(activeReport.generatedAt).toLocaleString()} • Officer: {activeReport.preparedBy} ({activeReport.role})
               </p>
             </div>
@@ -168,21 +168,21 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={handlePrint}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-xs cursor-pointer border border-slate-300 dark:border-slate-700 shadow-xs"
               >
-                <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                <Printer className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 <span>Print / PDF</span>
               </button>
               <button
                 onClick={handleDownloadCSV}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold cursor-pointer shadow-xs"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Export CSV</span>
               </button>
               <button
                 onClick={() => setActiveReport(null)}
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -190,57 +190,57 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           </div>
 
           {/* Executive Summary */}
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-1">
-            <span className="text-cyan-400 font-bold uppercase tracking-wider block">
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono text-xs space-y-1">
+            <span className="text-cyan-700 dark:text-cyan-400 font-bold uppercase tracking-wider block">
               1.0 Executive Operational Summary
             </span>
-            <p className="text-slate-300 leading-relaxed font-sans">
+            <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
               {activeReport.executiveSummary}
             </p>
           </div>
 
           {/* Statistical Breakdown Grid */}
           <div>
-            <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block mb-2">
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
               2.0 Quantitative Logistics Telemetry
             </span>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 font-mono text-xs">
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">Nodes Monitored</span>
-                <div className="text-lg font-bold text-white mt-0.5">{activeReport.statistics.totalLocationsMonitored}</div>
+                <div className="text-lg font-bold text-slate-900 dark:text-white mt-0.5">{activeReport.statistics.totalLocationsMonitored}</div>
               </div>
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">Total SKUs</span>
-                <div className="text-lg font-bold text-white mt-0.5">{activeReport.statistics.totalInventorySkus}</div>
+                <div className="text-lg font-bold text-slate-900 dark:text-white mt-0.5">{activeReport.statistics.totalInventorySkus}</div>
               </div>
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">Critical Alerts</span>
-                <div className="text-lg font-bold text-rose-400 mt-0.5">{activeReport.statistics.criticalStockAlerts}</div>
+                <div className="text-lg font-bold text-rose-600 dark:text-rose-400 mt-0.5">{activeReport.statistics.criticalStockAlerts}</div>
               </div>
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">Active Convoys</span>
-                <div className="text-lg font-bold text-emerald-400 mt-0.5">{activeReport.statistics.fleetActiveSorties}</div>
+                <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">{activeReport.statistics.fleetActiveSorties}</div>
               </div>
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">Payload Capacity</span>
-                <div className="text-lg font-bold text-cyan-300 mt-0.5">{activeReport.statistics.totalTransportCapacityTons} T</div>
+                <div className="text-lg font-bold text-cyan-700 dark:text-cyan-300 mt-0.5">{activeReport.statistics.totalTransportCapacityTons} T</div>
               </div>
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] text-slate-500">AI Model Fit</span>
-                <div className="text-lg font-bold text-emerald-400 mt-0.5">94.2%</div>
+                <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">94.2%</div>
               </div>
             </div>
           </div>
 
-          {/* AI-Generated Observations & Recommended Actions (User requirement) */}
-          <div className="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/30 font-mono text-xs space-y-2">
-            <span className="text-cyan-400 font-bold uppercase tracking-wider block">
+          {/* AI-Generated Observations & Recommended Actions */}
+          <div className="p-4 rounded-xl bg-cyan-50/60 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 font-mono text-xs space-y-2">
+            <span className="text-cyan-800 dark:text-cyan-400 font-bold uppercase tracking-wider block">
               3.0 AI-Generated Actionable Directives & Observations
             </span>
-            <ul className="space-y-1.5 text-slate-300">
+            <ul className="space-y-1.5 text-slate-700 dark:text-slate-300">
               {activeReport.actionItems.map((action: string, i: number) => (
                 <li key={i} className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
                   <span>{action}</span>
                 </li>
               ))}
@@ -250,12 +250,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           {/* Critical Stocks Audit Table */}
           {activeReport.criticalItemsSample && activeReport.criticalItemsSample.length > 0 && (
             <div>
-              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block mb-2">
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
                 4.0 Critical Stock Shortage Ledger
               </span>
-              <div className="overflow-x-auto rounded-lg border border-slate-800">
+              <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xs">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-slate-950 border-b border-slate-800 text-slate-400">
+                  <thead className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
                     <tr>
                       <th className="py-2.5 px-3">Item Nomenclature</th>
                       <th className="py-2.5 px-3">Sector Location</th>
@@ -264,14 +264,14 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                       <th className="py-2.5 px-3">Stockout Risk</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60">
                     {activeReport.criticalItemsSample.map((item: any, i: number) => (
-                      <tr key={i} className="bg-slate-900/40">
-                        <td className="py-2 px-3 text-white font-sans">{item.item}</td>
-                        <td className="py-2 px-3 text-cyan-300">{item.location}</td>
-                        <td className="py-2 px-3 text-rose-400 font-bold">{item.currentStock}</td>
-                        <td className="py-2 px-3 text-slate-400">{item.minStock}</td>
-                        <td className="py-2 px-3 text-rose-400">{item.riskScore}</td>
+                      <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                        <td className="py-2 px-3 text-slate-900 dark:text-white font-sans">{item.item}</td>
+                        <td className="py-2 px-3 text-cyan-700 dark:text-cyan-300">{item.location}</td>
+                        <td className="py-2 px-3 text-rose-600 dark:text-rose-400 font-bold">{item.currentStock}</td>
+                        <td className="py-2 px-3 text-slate-500 dark:text-slate-400">{item.minStock}</td>
+                        <td className="py-2 px-3 text-rose-600 dark:text-rose-400">{item.riskScore}</td>
                       </tr>
                     ))}
                   </tbody>

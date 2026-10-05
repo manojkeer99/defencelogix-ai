@@ -33,7 +33,14 @@ function MainApp() {
   const { user, token, authError, handleAuthError, requestDemoToken, clearAuthError } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('defencelogix_theme');
+      if (saved === 'light') return false;
+      if (saved === 'dark') return true;
+    }
+    return true;
+  });
   const [logiAiOpen, setLogiAiOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
 
@@ -119,6 +126,24 @@ function MainApp() {
   useEffect(() => {
     fetchAllData();
   }, []);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        try {
+          localStorage.setItem('defencelogix_theme', 'dark');
+        } catch (e) {}
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+        try {
+          localStorage.setItem('defencelogix_theme', 'light');
+        } catch (e) {}
+      }
+    }
+  }, [darkMode]);
 
   // Mutator Actions
   const handleUpdateItem = async (id: string, updates: Partial<InventoryItem>) => {
@@ -377,7 +402,7 @@ function MainApp() {
   const criticalStockCount = inventory.filter(i => i.status === 'CRITICAL').length;
 
   return (
-    <div className={`min-h-screen flex flex-col ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-900 text-slate-100'}`}>
+    <div className={`min-h-screen flex flex-col ${darkMode ? 'dark bg-slate-950 text-slate-100' : 'light bg-slate-50 text-slate-900'} transition-colors duration-150`}>
       {/* Top Command Center Header */}
       <Navbar
         currentTab={currentTab}
@@ -403,6 +428,18 @@ function MainApp() {
         {/* Content Area */}
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-tactical-grid">
           <div className="max-w-7xl mx-auto">
+            {initialLoading ? (
+              <div className="p-12 text-center space-y-4">
+                <div className="w-12 h-12 border-3 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                <div className="font-heading text-lg font-bold tracking-wide text-slate-800 dark:text-slate-200">
+                  INITIALIZING DEFENCELOGIX DSS...
+                </div>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  Synchronizing inventory, GIS sectors, IoT nodes & time-series forecasting engine
+                </p>
+              </div>
+            ) : (
+              <>
             {authError && (
               <div className="mb-4 bg-amber-950/90 border border-amber-500/50 text-amber-200 px-4 py-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
                 <div className="flex items-center gap-2.5">
@@ -553,6 +590,8 @@ function MainApp() {
 
             {currentTab === 'landing' && (
               <LandingPage setCurrentTab={setCurrentTab} />
+            )}
+            </>
             )}
           </div>
         </main>

@@ -235,15 +235,15 @@ export const ApiDocsAndTestsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header and Mode Selector */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900 border border-cyan-500/30">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <Code2 className="w-5 h-5 text-cyan-400" />
-            <h1 className="font-heading text-xl font-bold tracking-wide text-white">
+            <Code2 className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+            <h1 className="font-heading text-xl font-bold tracking-wide text-slate-900 dark:text-white">
               VERIFICATION TEST SUITE & INTERACTIVE REST API EXPLORER
             </h1>
           </div>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
             Automated compliance testing for SIH Problem Statement 26251 requirements and live OpenAPI documentation
           </p>
         </div>
@@ -252,7 +252,7 @@ export const ApiDocsAndTestsView: React.FC = () => {
           <button
             onClick={() => setActiveTab('tests')}
             className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-colors cursor-pointer ${
-              activeTab === 'tests' ? 'bg-cyan-600 text-white font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'
+              activeTab === 'tests' ? 'bg-cyan-600 text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
             }`}
           >
             Automated Test Suite
@@ -260,7 +260,7 @@ export const ApiDocsAndTestsView: React.FC = () => {
           <button
             onClick={() => setActiveTab('api_docs')}
             className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-colors cursor-pointer ${
-              activeTab === 'api_docs' ? 'bg-cyan-600 text-white font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'
+              activeTab === 'api_docs' ? 'bg-cyan-600 text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
             }`}
           >
             REST API Explorer
@@ -271,12 +271,12 @@ export const ApiDocsAndTestsView: React.FC = () => {
       {/* Tab 1: Automated Test Runner */}
       {activeTab === 'tests' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs">
             <div>
-              <h2 className="font-heading text-base font-bold text-white">
+              <h2 className="font-heading text-base font-bold text-slate-900 dark:text-white">
                 DefenceLogix End-to-End Test Suite
               </h2>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                 Runs 8 comprehensive operational tests: JWT RBAC, DB Counts, ML Forecast Bounds, Safety Stock ROP, Solver & IoT
               </p>
             </div>
@@ -284,7 +284,7 @@ export const ApiDocsAndTestsView: React.FC = () => {
             <button
               onClick={runAllTests}
               disabled={runningTests}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold shadow-lg transition-all cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
             >
               <Play className={`w-4 h-4 ${runningTests ? 'animate-spin' : ''}`} />
               <span>{runningTests ? 'Executing Test Runner...' : 'Run Automated Test Suite'}</span>
@@ -293,13 +293,13 @@ export const ApiDocsAndTestsView: React.FC = () => {
 
           {/* Test Status Banner */}
           {testResults.length > 0 && (
-            <div className="flex items-center gap-4 p-3 rounded-lg bg-slate-950 border border-slate-800 font-mono text-xs">
-              <span className="text-slate-400">Total Executed: {testResults.length}</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
+            <div className="flex items-center gap-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono text-xs shadow-xs">
+              <span className="text-slate-600 dark:text-slate-400">Total Executed: {testResults.length}</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {passedCount} Passed
               </span>
               {failedCount > 0 && (
-                <span className="text-rose-400 font-bold flex items-center gap-1">
+                <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1">
                   <XCircle className="w-3.5 h-3.5" /> {failedCount} Failed
                 </span>
               )}
@@ -311,29 +311,31 @@ export const ApiDocsAndTestsView: React.FC = () => {
             {testResults.map((result, idx) => (
               <div
                 key={idx}
-                className={`hud-panel p-3.5 rounded-xl flex items-start justify-between gap-3 text-xs font-mono border ${
-                  result.status === 'passed' ? 'border-emerald-500/30' : 'border-rose-500/40 bg-rose-950/20'
+                className={`hud-panel p-3.5 rounded-xl flex items-start justify-between gap-3 text-xs font-mono border shadow-xs ${
+                  result.status === 'passed' 
+                    ? 'border-emerald-200 dark:border-emerald-500/30 bg-white dark:bg-slate-950/80' 
+                    : 'border-rose-300 dark:border-rose-500/40 bg-rose-50/60 dark:bg-rose-950/20'
                 }`}
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     {result.status === 'passed' ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                      <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                     )}
-                    <span className="font-bold text-white">{result.name}</span>
+                    <span className="font-bold text-slate-900 dark:text-white">{result.name}</span>
                     <span className="text-[10px] text-slate-500">[{result.suite}]</span>
                   </div>
-                  <p className="text-slate-300 pl-6 text-[11px] font-mono">{result.details}</p>
+                  <p className="text-slate-600 dark:text-slate-300 pl-6 text-[11px] font-mono">{result.details}</p>
                 </div>
 
-                <span className="text-[10px] text-slate-400 shrink-0">{result.durationMs} ms</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 shrink-0">{result.durationMs} ms</span>
               </div>
             ))}
 
             {testResults.length === 0 && !runningTests && (
-              <div className="hud-panel p-8 text-center text-slate-400 text-xs font-mono">
+              <div className="hud-panel p-8 text-center text-slate-500 dark:text-slate-400 text-xs font-mono border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/80 shadow-xs">
                 Click "Run Automated Test Suite" to execute all tests across authentication, forecasting, inventory, optimization and IoT modules.
               </div>
             )}
@@ -345,8 +347,8 @@ export const ApiDocsAndTestsView: React.FC = () => {
       {activeTab === 'api_docs' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Endpoints List */}
-          <div className="hud-panel p-4 rounded-xl space-y-2">
-            <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block mb-2">
+          <div className="hud-panel p-4 rounded-xl space-y-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xs">
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2 font-bold">
               Available REST Endpoints
             </span>
             <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
@@ -366,32 +368,32 @@ export const ApiDocsAndTestsView: React.FC = () => {
                   }}
                   className={`w-full text-left p-2.5 rounded-lg border text-xs font-mono transition-all cursor-pointer ${
                     selectedEndpoint === ep.path 
-                      ? 'bg-cyan-950 border-cyan-400 text-cyan-300' 
-                      : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                      ? 'bg-cyan-50 dark:bg-cyan-950 border-cyan-500 text-cyan-800 dark:text-cyan-300 font-bold shadow-xs' 
+                      : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                      ep.method === 'GET' ? 'bg-blue-950 text-blue-300' : 'bg-emerald-950 text-emerald-300'
+                      ep.method === 'GET' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     }`}>
                       {ep.method}
                     </span>
                     <span className="truncate font-semibold">{ep.path}</span>
                   </div>
-                  <p className="text-[10px] text-slate-400 font-sans mt-1 line-clamp-1">{ep.desc}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-sans mt-1 line-clamp-1">{ep.desc}</p>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Interactive Request & Response Inspector */}
-          <div className="lg:col-span-2 hud-panel p-5 rounded-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="lg:col-span-2 hud-panel p-5 rounded-xl space-y-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-bold">
+                <span className="px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-950 border border-cyan-300 dark:border-cyan-500/40 text-cyan-800 dark:text-cyan-300 font-bold">
                   {selectedMethod}
                 </span>
-                <span className="text-white font-bold">{selectedEndpoint}</span>
+                <span className="text-slate-900 dark:text-white font-bold">{selectedEndpoint}</span>
               </div>
 
               <button
@@ -406,19 +408,19 @@ export const ApiDocsAndTestsView: React.FC = () => {
 
             {selectedMethod === 'POST' && (
               <div>
-                <label className="text-xs font-mono text-slate-400 block mb-1">Request Payload (JSON):</label>
+                <label className="text-xs font-mono text-slate-600 dark:text-slate-400 block mb-1">Request Payload (JSON):</label>
                 <textarea
                   rows={3}
                   value={requestBody}
                   onChange={(e) => setRequestBody(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-cyan-400 focus:outline-none"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-slate-900 dark:text-white font-mono focus:border-cyan-500 focus:outline-none"
                 />
               </div>
             )}
 
             <div>
-              <span className="text-xs font-mono text-slate-400 block mb-1">Server Response (JSON):</span>
-              <pre className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono text-emerald-400 overflow-x-auto max-h-[380px] overflow-y-auto leading-relaxed">
+              <span className="text-xs font-mono text-slate-600 dark:text-slate-400 block mb-1 font-semibold">Server Response (JSON):</span>
+              <pre className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono text-emerald-400 overflow-x-auto max-h-[380px] overflow-y-auto leading-relaxed">
                 {apiResponse ? JSON.stringify(apiResponse, null, 2) : '// Click "Send Request" to inspect live server payload'}
               </pre>
             </div>
